@@ -100,30 +100,6 @@ const UsersPage = () => {
         <div className="flex flex-1 flex-col">
           <DashboardHeader email={user?.email ?? ""} />
           <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pb-10 pt-6">
-            <section className="df-hero-surface animate-df-fade-up">
-              <div className="relative flex flex-col gap-4 px-6 py-6 md:flex-row md:items-center md:justify-between md:px-8 md:py-7">
-                <div className="space-y-2 md:space-y-3">
-                  <p className="df-badge-soft w-fit">Governança de acesso</p>
-                  <h1 className="text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-                    Usuários e perfis de acesso.
-                  </h1>
-                  <p className="max-w-xl text-sm text-muted-foreground md:text-base">
-                    Controle quem pode criar ideias, editar clientes, mapear processos e orquestrar automações.
-                  </p>
-                </div>
-                <div className="mt-3 flex flex-col gap-2 md:mt-0 md:items-end">
-                  <Button
-                    variant="default"
-                    size="lg"
-                    className="shadow-[0_10px_30px_-18px_hsl(var(--df-shadow-strong))]"
-                    onClick={() => setIsInviteOpen(true)}
-                  >
-                    + Convidar Usuário
-                  </Button>
-                  <p className="text-xs text-muted-foreground">Convide admins, managers, analysts ou viewers para o workspace.</p>
-                </div>
-              </div>
-            </section>
 
             <section className="space-y-4">
               <div className="overflow-x-auto rounded-lg border bg-card/80">
