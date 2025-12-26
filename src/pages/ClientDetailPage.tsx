@@ -1,16 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
 import DashboardHeader from "@/components/DashboardHeader";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import type { Client } from "@/types/client";
-import { loadClients } from "@/lib/clientsStorage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart";
 import { Line, LineChart, XAxis, YAxis, CartesianGrid } from "recharts";
+import type { Tables } from "@/integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client";
 
 const chartConfig = {
   interactions: {
@@ -32,14 +32,49 @@ const ClientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
-
-  const client: Client | undefined = loadClients().find((c) => c.id === id);
+  const [tenant, setTenant] = useState<Tables<"tenants"> | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    document.title = client ? `DromeFlow – ${client.name}` : "DromeFlow – Cliente";
-  }, [client]);
+    const loadTenant = async () => {
+      if (!id) return;
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from("tenants")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
 
-  if (!client) {
+      if (!error) {
+        setTenant(data);
+      }
+      setIsLoading(false);
+    };
+
+    loadTenant();
+  }, [id]);
+
+  useEffect(() => {
+    document.title = tenant ? `DromeFlow – ${tenant.name}` : "DromeFlow – Cliente";
+  }, [tenant]);
+
+  if (isLoading) {
+    return (
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full bg-gradient-to-br from-background via-[hsl(var(--df-muted-deep))] to-[hsl(var(--df-hero-accent))]">
+          <AppSidebar />
+          <div className="flex flex-1 flex-col">
+            <DashboardHeader email={user?.email ?? ""} />
+            <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-4 pb-10 pt-6">
+              <p className="text-sm text-muted-foreground">Carregando cliente...</p>
+            </main>
+          </div>
+        </div>
+      </SidebarProvider>
+    );
+  }
+
+  if (!tenant) {
     return (
       <SidebarProvider>
         <div className="flex min-h-screen w-full bg-gradient-to-br from-background via-[hsl(var(--df-muted-deep))] to-[hsl(var(--df-hero-accent))]">
@@ -67,65 +102,42 @@ const ClientDetailPage = () => {
           <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 pb-10 pt-6">
             <section className="df-hero-surface">
               <div className="relative flex flex-col gap-3 px-6 py-6 md:px-8 md:py-7">
-                <p className="df-badge-soft w-fit">Cliente</p>
+                <p className="df-badge-soft w-fit">Cliente (Tenant)</p>
                 <h1 className="text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                  {client.name}
+                  {tenant.name}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  {client.industry || "Indústria não informada"} • Criado em {client.created_at}
+                  Slug: {tenant.slug} • Plano: {tenant.plan ?? "starter"} • Criado em{" "}
+                  {tenant.created_at ? new Date(tenant.created_at).toLocaleDateString("pt-BR") : "—"}
                 </p>
               </div>
             </section>
 
-            <Tabs defaultValue="contacts" className="space-y-4">
+            <Tabs defaultValue="overview" className="space-y-4">
               <TabsList>
-                <TabsTrigger value="contacts">Contatos</TabsTrigger>
-                <TabsTrigger value="processes">Processos mapeados</TabsTrigger>
+                <TabsTrigger value="overview">Resumo</TabsTrigger>
                 <TabsTrigger value="metrics">Métricas</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="contacts" className="space-y-4">
+              <TabsContent value="overview" className="space-y-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                    <CardTitle className="text-sm font-semibold">Contatos</CardTitle>
-                    {/* Poderíamos reutilizar o modal para adicionar novos contatos futuramente */}
+                    <CardTitle className="text-sm font-semibold">Informações gerais</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2 text-sm">
-                    {client.contacts.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">Nenhum contato cadastrado.</p>
-                    ) : (
-                      <ul className="space-y-2">
-                        {client.contacts.map((c) => (
-                          <li
-                            key={c.id}
-                            className="flex flex-col gap-1 rounded-md border border-border/60 bg-card/60 p-3 text-xs md:flex-row md:items-center md:justify-between"
-                          >
-                            <div>
-                              <p className="font-medium text-foreground">{c.name}</p>
-                              <p className="text-muted-foreground">{c.email}</p>
-                              {c.phone && <p className="text-muted-foreground">{c.phone}</p>}
-                            </div>
-                            <div className="mt-1 text-xs text-muted-foreground md:mt-0">
-                              Papel: {c.role}
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="processes">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm font-semibold">Processos mapeados</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Nenhum processo vinculado ainda. No futuro, você poderá conectar blueprints e fluxos deste cliente
-                      aqui.
+                    <p>
+                      <span className="font-medium">Status:</span> {tenant.status ?? "active"}
                     </p>
+                    {tenant.billing_email && (
+                      <p>
+                        <span className="font-medium">Email de cobrança:</span> {tenant.billing_email}
+                      </p>
+                    )}
+                    {tenant.subscription_id && (
+                      <p>
+                        <span className="font-medium">Assinatura:</span> {tenant.subscription_id}
+                      </p>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
