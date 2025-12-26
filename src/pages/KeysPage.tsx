@@ -303,35 +303,6 @@ const KeysPage = () => {
         <div className="flex flex-1 flex-col">
           <DashboardHeader email={user?.email ?? ""} />
           <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pb-10 pt-6">
-            <section className="df-hero-surface animate-df-fade-up">
-              <div className="relative flex flex-col gap-4 px-6 py-6 md:flex-row md:items-center md:justify-between md:px-8 md:py-7">
-                <div className="space-y-2 md:space-y-3">
-                  <p className="df-badge-soft w-fit">Vault de integrações</p>
-                  <h1 className="text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-                    Painel de chaves, tokens e secrets.
-                  </h1>
-                  <p className="max-w-xl text-sm text-muted-foreground md:text-base">
-                    Organize chaves por ferramenta, cliente e ambiente. Ideal para documentar integrações e orquestrar
-                    automações do seu ecossistema.
-                  </p>
-                </div>
-                <div className="mt-3 flex flex-col gap-2 md:mt-0 md:items-end">
-                  {canCreate && (
-                    <Button
-                      variant="default"
-                      size="lg"
-                      className="shadow-[0_10px_30px_-18px_hsl(var(--df-shadow-strong))]"
-                      onClick={handleNew}
-                    >
-                      <KeyRound className="mr-2 h-4 w-4" /> + Adicionar chave
-                    </Button>
-                  )}
-                  <p className="text-xs text-muted-foreground">
-                    Não armazene secrets reais de produção aqui. Use apenas para desenvolvimento e documentação.
-                  </p>
-                </div>
-              </div>
-            </section>
 
             <section className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]">
               <div className="space-y-4">
