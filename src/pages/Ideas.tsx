@@ -21,6 +21,7 @@ const IdeasPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingIdea, setEditingIdea] = useState<Idea | null>(null);
   const [transitioningIdea, setTransitioningIdea] = useState<Idea | null>(null);
+  const [draggedIdeaId, setDraggedIdeaId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -87,19 +88,24 @@ const IdeasPage = () => {
   const handleConfirmPhase = async (nextPhase: IdeaPhase) => {
     if (!transitioningIdea || !tenantId || !user) return;
 
+    await updateIdeaPhase(transitioningIdea, nextPhase);
+    setTransitioningIdea(null);
+  };
+
+  const updateIdeaPhase = async (idea: Idea, nextPhase: IdeaPhase) => {
+    if (!tenantId || !user) return;
+
     const updated = await saveIdea(tenantId, user.id, {
-      ...transitioningIdea,
+      ...idea,
       current_phase: nextPhase,
     });
 
     if (updated) {
-      setIdeas((prev) => prev.map((idea) => (idea.id === updated.id ? updated : idea)));
+      setIdeas((prev) => prev.map((i) => (i.id === updated.id ? updated : i)));
       toast({ title: "Sucesso", description: "Fase atualizada." });
     } else {
       toast({ title: "Erro", description: "Não foi possível atualizar a fase.", variant: "destructive" });
     }
-
-    setTransitioningIdea(null);
   };
 
   if (loading) {
@@ -164,8 +170,21 @@ const IdeasPage = () => {
                   implementation: "Implantação",
                 };
 
+                const handleDropOnPhase = async () => {
+                  if (!draggedIdeaId) return;
+                  const draggedIdea = ideas.find((i) => i.id === draggedIdeaId);
+                  if (!draggedIdea || draggedIdea.current_phase === phase) return;
+                  await updateIdeaPhase(draggedIdea, phase);
+                  setDraggedIdeaId(null);
+                };
+
                 return (
-                  <div key={phase} className="min-w-[260px] flex-1">
+                  <div
+                    key={phase}
+                    className="min-w-[260px] flex-1 rounded-lg border border-border/60 bg-background/40 p-2"
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={handleDropOnPhase}
+                  >
                     <div className="mb-3 flex items-center justify-between gap-2">
                       <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {phaseLabels[phase]}
@@ -182,16 +201,23 @@ const IdeasPage = () => {
                         </p>
                       ) : (
                         ideasInPhase.map((idea) => (
-                          <IdeaCard
+                          <div
                             key={idea.id}
-                            idea={idea}
-                            onEdit={() => {
-                              setEditingIdea(idea);
-                              setIsFormOpen(true);
-                            }}
-                            onTransitionPhase={() => setTransitioningIdea(idea)}
-                            onDelete={() => handleDeleteIdea(idea.id)}
-                          />
+                            draggable
+                            onDragStart={() => setDraggedIdeaId(idea.id)}
+                            onDragEnd={() => setDraggedIdeaId((current) => (current === idea.id ? null : current))}
+                            className="hover-scale cursor-grab active:cursor-grabbing"
+                          >
+                            <IdeaCard
+                              idea={idea}
+                              onEdit={() => {
+                                setEditingIdea(idea);
+                                setIsFormOpen(true);
+                              }}
+                              onTransitionPhase={() => setTransitioningIdea(idea)}
+                              onDelete={() => handleDeleteIdea(idea.id)}
+                            />
+                          </div>
                         ))
                       )}
                     </div>
