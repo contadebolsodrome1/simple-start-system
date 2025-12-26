@@ -1,4 +1,5 @@
 import type { Tag, Tool } from "@/types/Secret";
+import type { ReactNode } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,9 +22,10 @@ interface KeyFiltersProps {
     searchQuery?: string;
   };
   onChange: (next: KeyFiltersProps["filters"]) => void;
+  rightSlot?: ReactNode;
 }
 
-export const KeyFilters = ({ tools, tags, clients, filters, onChange }: KeyFiltersProps) => {
+export const KeyFilters = ({ tools, tags, clients, filters, onChange, rightSlot }: KeyFiltersProps) => {
   const update = (patch: Partial<KeyFiltersProps["filters"]>) => onChange({ ...filters, ...patch });
 
   const toggleTag = (id: string, checked: boolean) => {
@@ -35,7 +37,10 @@ export const KeyFilters = ({ tools, tags, clients, filters, onChange }: KeyFilte
 
   return (
     <div className="space-y-3 rounded-xl border bg-card/80 p-3 md:p-4">
-      <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">Filtros ativos</p>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">Filtros ativos</p>
+        {rightSlot}
+      </div>
       <div className="grid gap-3 md:grid-cols-3">
         <div className="space-y-1.5">
           <Label className="text-xs">Ferramenta</Label>
