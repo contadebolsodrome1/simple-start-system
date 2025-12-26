@@ -152,30 +152,6 @@ const IdeasPage = () => {
         <div className="flex flex-1 flex-col">
           <DashboardHeader email={user?.email ?? ""} onNewIdea={() => { setEditingIdea(null); setIsFormOpen(true); }} />
           <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pb-10 pt-6">
-            <section className="df-hero-surface animate-df-fade-up">
-              <div className="relative flex flex-col gap-4 px-6 py-6 md:flex-row md:items-center md:justify-between md:px-8 md:py-7">
-                <div className="space-y-2 md:space-y-3">
-                  <p className="df-badge-soft w-fit">Pipeline de ideias</p>
-                  <h1 className="text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-                    Ideias em diferentes fases de maturidade.
-                  </h1>
-                  <p className="max-w-xl text-sm text-muted-foreground md:text-base">
-                    Centralize iniciativas em Concepção, Validação, Estruturação e Implantação para ter clareza do funil.
-                  </p>
-                </div>
-                <div className="mt-3 flex flex-col gap-2 md:mt-0 md:items-end">
-                  <Button
-                    variant="default"
-                    size="lg"
-                    className="shadow-[0_10px_30px_-18px_hsl(var(--df-shadow-strong))]"
-                    onClick={() => { setEditingIdea(null); setIsFormOpen(true); }}
-                  >
-                    + Nova Ideia
-                  </Button>
-                  <p className="text-xs text-muted-foreground">Comece registrando a próxima automação crítica.</p>
-                </div>
-              </div>
-            </section>
 
             <section className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {ideas.length === 0 ? (
