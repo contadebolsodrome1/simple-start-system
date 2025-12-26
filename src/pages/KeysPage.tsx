@@ -177,9 +177,6 @@ const KeysPage = () => {
     document.title = "DromeFlow – Keys & Secrets";
   }, []);
 
-  const canCreate = userRole ? Permissions.canManageSecrets(userRole) : false;
-  const canView = userRole ? Permissions.canViewSecrets(userRole) : false;
-
   const clients: ClientOption[] = useMemo(() => {
     try {
       const raw = loadClients();
@@ -189,6 +186,13 @@ const KeysPage = () => {
     }
   }, []);
 
+  const clientOptions: ClientOption[] = useMemo(
+    () => [{ id: "generico", name: "Genérico" }, ...clients],
+    [clients],
+  );
+
+  const canCreate = userRole ? Permissions.canManageSecrets(userRole) : false;
+  const canView = userRole ? Permissions.canViewSecrets(userRole) : false;
   const handleNew = () => {
     setEditing(null);
     setIsFormOpen(true);
@@ -289,10 +293,6 @@ const KeysPage = () => {
     );
   }
 
-  const clientOptions: ClientOption[] = useMemo(
-    () => [{ id: "generico", name: "Genérico" }, ...clients],
-    [clients],
-  );
 
   const stats = getSecretStats();
 
