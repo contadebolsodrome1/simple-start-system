@@ -32,7 +32,7 @@ const Index = () => {
                     <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-[0.12em]">
                       {stat.label}
                     </CardTitle>
-                    <stat.icon className="h-4 w-4 text-[hsl(var(--primary))]" />
+                    <stat.icon className="h-4 w-4 text-[hsl(var(--accent))]" />
                   </CardHeader>
                   <CardContent>
                     <p className="text-2xl font-semibold tracking-tight">{stat.value}</p>
