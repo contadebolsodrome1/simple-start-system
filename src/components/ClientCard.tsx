@@ -11,7 +11,8 @@ interface ClientCardProps {
 const statusMeta: Record<Client["status"], { label: string; className: string }> = {
   active: {
     label: "Ativo",
-    className: "bg-[hsl(var(--primary)/0.1)] text-[hsl(var(--primary))] border-[hsl(var(--primary)/0.4)]",
+    className:
+      "bg-[hsl(var(--secondary)/0.18)] text-[hsl(var(--secondary-foreground))] border-[hsl(var(--secondary))]",
   },
   inactive: {
     label: "Inativo",
@@ -19,7 +20,7 @@ const statusMeta: Record<Client["status"], { label: string; className: string }>
   },
   prospect: {
     label: "Prospect",
-    className: "bg-[hsl(var(--accent)/0.15)] text-[hsl(var(--accent-foreground))] border-[hsl(var(--accent)/0.5)]",
+    className: "bg-[hsl(var(--accent)/0.15)] text-[hsl(var(--accent-foreground))] border-[hsl(var(--accent))]",
   },
 };
 
