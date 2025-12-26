@@ -305,27 +305,6 @@ const KeysPage = () => {
           <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pb-10 pt-6">
 
             <section className="space-y-4">
-              <div className="flex items-center justify-between gap-2">
-                <KeySearch
-                  query={filters.searchQuery ?? ""}
-                  onChange={(value) => {
-                    const next = { ...filters, searchQuery: value };
-                    setFilters(next);
-                    setRemoteFilters(next);
-                  }}
-                  resultsCount={filteredSecrets.length}
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="shrink-0"
-                  onClick={() => setExportDialogOpen(true)}
-                  aria-label="Exportar ou importar chaves"
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-              </div>
-
               <KeyFilters
                 tools={DEFAULT_TOOLS}
                 tags={DEFAULT_TAGS}
@@ -335,6 +314,28 @@ const KeysPage = () => {
                   setFilters(next);
                   setRemoteFilters(next);
                 }}
+                rightSlot={
+                  <div className="flex items-center gap-2">
+                    <KeySearch
+                      query={filters.searchQuery ?? ""}
+                      onChange={(value) => {
+                        const next = { ...filters, searchQuery: value };
+                        setFilters(next);
+                        setRemoteFilters(next);
+                      }}
+                      resultsCount={filteredSecrets.length}
+                    />
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="shrink-0"
+                      onClick={() => setExportDialogOpen(true)}
+                      aria-label="Exportar ou importar chaves"
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
+                  </div>
+                }
               />
 
               <div className="space-y-3">
