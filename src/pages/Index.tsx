@@ -1,160 +1,76 @@
-import { ArrowRight, CheckCircle2, Sparkles, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import AppSidebar from "@/components/AppSidebar";
+import DashboardHeader from "@/components/DashboardHeader";
 import { Button } from "@/components/ui/button";
+import { Lightbulb } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { stats } from "./dashboardStats";
 
 const Index = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "DromeFlow – Dashboard";
+  }, []);
+
   return (
-    <div className="app-shell">
-      <header className="border-b border-border/60 bg-background/70 backdrop-blur">
-        <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-md">
-              <Zap className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <div className="flex flex-col leading-tight">
-              <span className="font-display text-base font-semibold tracking-tight">Sistema Simples</span>
-              <span className="text-xs text-muted-foreground">Comece rápido. Cresça no seu ritmo.</span>
-            </div>
-          </div>
-
-          <div className="hidden items-center gap-3 sm:flex">
-            <span className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-              Primeira versão pronta
-            </span>
-            <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-soft" aria-hidden="true" />
-          </div>
-        </div>
-      </header>
-
-      <main className="app-container">
-        <section className="grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-center">
-          <div className="space-y-8">
-            <div className="pill">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Sistema simples, pensado para começar hoje</span>
-            </div>
-
-            <div className="space-y-4">
-              <h1 className="text-balance font-display text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
-                <span className="gradient-text">Sistema simples</span> para tirar suas ideias do papel.
-              </h1>
-              <p className="max-w-xl text-balance text-sm text-muted-foreground sm:text-base">
-                Uma base moderna em React, pronta para você adaptar: cadastros, painéis, relatórios e tudo mais que seu
-                projeto precisar.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <Button variant="hero" size="lg">
-                Começar protótipo
-                <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
-              </Button>
-              <Button variant="subtle" size="lg">
-                Ver ideias de módulos
-              </Button>
-            </div>
-
-            <div className="grid gap-4 text-sm text-muted-foreground sm:grid-cols-3">
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                <div>
-                  <p className="font-medium text-foreground">Interface pronta</p>
-                  <p className="text-xs text-muted-foreground">Layout responsivo, com tipografia e cores definidas.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                <div>
-                  <p className="font-medium text-foreground">Componentes reutilizáveis</p>
-                  <p className="text-xs text-muted-foreground">Botões, cards e estrutura para novos módulos.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                <div>
-                  <p className="font-medium text-foreground">Base escalável</p>
-                  <p className="text-xs text-muted-foreground">Pronto para conectar a banco de dados e login.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative mt-2 lg:mt-0">
-            <div className="hero-card group">
-              <div className="hero-glow animate-float" aria-hidden="true" />
-
-              <div className="flex items-center justify-between gap-3 pb-4">
-                <div>
-                  <p className="badge-soft mb-1">Primeiro passo</p>
-                  <p className="text-sm font-medium text-muted-foreground">Seu painel inicial</p>
-                </div>
-                <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                  Editável via chat
-                </span>
-              </div>
-
-              <div className="space-y-4 rounded-2xl border border-border/70 bg-background/80 p-4 shadow-sm">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Módulos sugeridos</span>
-                  <span>v0.1</span>
-                </div>
-                <div className="grid gap-3 text-sm">
-                  <div className="card-elevated flex items-center justify-between gap-3 bg-gradient-to-r from-primary/5 to-accent/5">
-                    <div>
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Cadastro</p>
-                      <p className="mt-1 text-sm font-semibold text-foreground">Clientes & Produtos</p>
-                    </div>
-                    <span className="rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-semibold text-primary">
-                      Essencial
-                    </span>
-                  </div>
-
-                  <div className="card-elevated flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Operações</p>
-                      <p className="mt-1 text-sm font-semibold text-foreground">Pedidos & Tarefas</p>
-                    </div>
-                    <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
-                      Próximo passo
-                    </span>
-                  </div>
-
-                  <div className="card-elevated flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Visão</p>
-                      <p className="mt-1 text-sm font-semibold text-foreground">Relatórios simples</p>
-                    </div>
-                    <span className="rounded-full bg-secondary/25 px-2.5 py-1 text-[11px] font-semibold text-secondary-foreground">
-                      Em breve
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                  <p>
-                    Dica: use o chat para pedir<br className="hidden sm:inline" /> cada módulo em detalhes.
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-gradient-to-br from-background via-[hsl(var(--df-muted-deep))] to-[hsl(var(--df-hero-accent))]">
+        <AppSidebar />
+        <div className="flex flex-1 flex-col">
+          <DashboardHeader email={user?.email ?? ""} onNewIdea={() => navigate("/ideas")} />
+          <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pb-10 pt-6">
+            <section className="df-hero-surface animate-df-fade-up">
+              <div className="df-hero-orbit animate-df-orbit" aria-hidden="true" />
+              <div className="relative flex flex-col gap-4 px-6 py-6 md:flex-row md:items-center md:justify-between md:px-8 md:py-7">
+                <div className="space-y-2 md:space-y-3">
+                  <p className="df-badge-soft w-fit">Bem-vindo ao cockpit de orquestração</p>
+                  <h1 className="text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+                    Olá, {user?.email?.split("@")[0] ?? "estrategista"}. Vamos acelerar seus fluxos com a DromeFlow.
+                  </h1>
+                  <p className="max-w-xl text-sm text-muted-foreground md:text-base">
+                    Acompanhe ideias, clientes e blueprints em um só lugar. Este é o painel base para suas próximas automações.
                   </p>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 font-medium text-primary">
-                    <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                    Interação guiada
-                  </span>
+                </div>
+                <div className="mt-3 flex flex-col gap-2 md:mt-0 md:items-end">
+                  <Button
+                    variant="default"
+                    size="lg"
+                    className="shadow-[0_10px_30px_-18px_hsl(var(--df-shadow-strong))]"
+                    onClick={() => navigate("/ideas")}
+                  >
+                    <Lightbulb className="mr-2 h-4 w-4" />
+                    Registrar nova ideia
+                  </Button>
+                  <p className="text-xs text-muted-foreground">Próximo passo: mapeie o primeiro fluxo crítico.</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-      </main>
+            </section>
 
-      <footer className="border-t border-border/60 bg-background/80">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
-          <p>
-            Sistema Simples • Base criada para você adaptar a qualquer tipo de projeto.
-          </p>
-          <p className="flex items-center gap-1">
-            Pronto para o próximo passo? <span className="font-medium text-foreground">Peça novos módulos no chat.</span>
-          </p>
+            <section aria-label="Indicadores principais" className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {stats.map((stat) => (
+                <Card key={stat.label} className="df-stat-card">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-[0.12em]">
+                      {stat.label}
+                    </CardTitle>
+                    <stat.icon className="h-4 w-4 text-[hsl(var(--primary))]" />
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-semibold tracking-tight">{stat.value}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">Dados simulados para a versão inicial.</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </section>
+          </main>
         </div>
-      </footer>
-    </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
