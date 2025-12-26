@@ -218,6 +218,10 @@ const IdeasPage = () => {
                             draggable
                             onDragStart={() => setDraggedIdeaId(idea.id)}
                             onDragEnd={() => setDraggedIdeaId((current) => (current === idea.id ? null : current))}
+                            onDoubleClick={() => {
+                              setEditingIdea(idea);
+                              setIsFormOpen(true);
+                            }}
                             className="hover-scale cursor-grab active:cursor-grabbing"
                           >
                             <IdeaCard

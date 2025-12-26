@@ -41,49 +41,15 @@ export function IdeaCard({ idea, onEdit, onTransitionPhase, onDelete }: IdeaCard
     : "Sem descrição detalhada ainda.";
 
   return (
-    <Card className="df-stat-card flex h-full flex-col justify-between">
-      <CardHeader className="space-y-2 pb-3">
-        <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-base font-semibold leading-snug">{idea.title}</CardTitle>
-          <Badge className={cn("shrink-0 border px-2 py-0.5 text-xs", phaseInfo.colorClass)}>{phaseInfo.label}</Badge>
+    <Card className="flex h-full flex-col justify-between border-border/60 bg-background/80 px-3 py-2 shadow-sm hover-scale">
+      <CardHeader className="p-0">
+        <div className="flex items-center gap-2">
+          <div className="h-1 w-8 rounded-full bg-[hsl(var(--primary)/0.7)]" />
+          <CardTitle className="line-clamp-2 text-sm font-semibold leading-snug text-foreground">
+            {idea.title}
+          </CardTitle>
         </div>
-        <p className="text-xs text-muted-foreground line-clamp-3">{shortDescription}</p>
       </CardHeader>
-      <CardContent className="pb-3">
-        <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-          <span className="inline-flex items-center gap-1">
-            <CalendarClock className="h-3 w-3" /> Criada: {idea.created_at}
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <CalendarClock className="h-3 w-3 opacity-60" /> Atualizada: {idea.updated_at}
-          </span>
-        </div>
-        {idea.tags.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {idea.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </CardContent>
-      <CardFooter className="flex justify-between gap-2 pt-0">
-        <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={onEdit}>
-            <Pencil className="mr-1 h-3 w-3" /> Editar
-          </Button>
-          <Button size="sm" variant="outline" onClick={onTransitionPhase}>
-            <ArrowRightLeft className="mr-1 h-3 w-3" /> Transicionar Fase
-          </Button>
-        </div>
-        <Button size="sm" variant="destructive" onClick={onDelete}>
-          <Trash2 className="mr-1 h-3 w-3" /> Deletar
-        </Button>
-      </CardFooter>
     </Card>
   );
 }
