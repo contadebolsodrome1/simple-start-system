@@ -153,25 +153,51 @@ const IdeasPage = () => {
           <DashboardHeader email={user?.email ?? ""} onNewIdea={() => { setEditingIdea(null); setIsFormOpen(true); }} />
           <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pb-10 pt-6">
 
-            <section className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {ideas.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  Nenhuma ideia cadastrada ainda. Clique em "+ Nova Ideia" para começar a montar seu pipeline.
-                </p>
-              ) : (
-                ideas.map((idea) => (
-                  <IdeaCard
-                    key={idea.id}
-                    idea={idea}
-                    onEdit={() => {
-                      setEditingIdea(idea);
-                      setIsFormOpen(true);
-                    }}
-                    onTransitionPhase={() => setTransitioningIdea(idea)}
-                    onDelete={() => handleDeleteIdea(idea.id)}
-                  />
-                ))
-              )}
+            <section className="mt-4 flex gap-4 overflow-x-auto pb-2">
+              {(["conception", "validation", "structuring", "implementation"] as IdeaPhase[]).map((phase) => {
+                const ideasInPhase = ideas.filter((idea) => idea.current_phase === phase);
+
+                const phaseLabels: Record<IdeaPhase, string> = {
+                  conception: "Concepção",
+                  validation: "Validação",
+                  structuring: "Estruturação",
+                  implementation: "Implantação",
+                };
+
+                return (
+                  <div key={phase} className="min-w-[260px] flex-1">
+                    <div className="mb-3 flex items-center justify-between gap-2">
+                      <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        {phaseLabels[phase]}
+                      </h2>
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
+                        {ideasInPhase.length}
+                      </span>
+                    </div>
+
+                    <div className="space-y-3">
+                      {ideasInPhase.length === 0 ? (
+                        <p className="text-[11px] text-muted-foreground/80">
+                          Nenhuma ideia nesta fase ainda.
+                        </p>
+                      ) : (
+                        ideasInPhase.map((idea) => (
+                          <IdeaCard
+                            key={idea.id}
+                            idea={idea}
+                            onEdit={() => {
+                              setEditingIdea(idea);
+                              setIsFormOpen(true);
+                            }}
+                            onTransitionPhase={() => setTransitioningIdea(idea)}
+                            onDelete={() => handleDeleteIdea(idea.id)}
+                          />
+                        ))
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </section>
           </main>
         </div>
