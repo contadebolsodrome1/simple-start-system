@@ -130,6 +130,8 @@ const AutomationsPage = () => {
                         variant={automation.status === "active" ? "default" : "outline"}
                         className={cn(
                           "text-[11px]",
+                          automation.status === "active" &&
+                            "bg-[hsl(var(--secondary)/0.2)] text-[hsl(var(--secondary-foreground))] border-[hsl(var(--secondary))]",
                           automation.status === "inactive" && "border-border/60 text-muted-foreground",
                         )}
                       >
