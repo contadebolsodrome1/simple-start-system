@@ -12,11 +12,10 @@ import { KeysList } from "@/components/Keys/KeysList";
 import { KeyForm } from "@/components/Keys/KeyForm";
 import { KeySearch } from "@/components/Keys/KeySearch";
 import { KeyFilters } from "@/components/Keys/KeyFilters";
-import { KeyStats } from "@/components/Keys/KeyStats";
 import { KeyHistory } from "@/components/Keys/KeyHistory";
 import { KeyExportImport } from "@/components/Keys/KeyExportImport";
 import type { Secret, Tag, Tool } from "@/types/Secret";
-import { KeyRound } from "lucide-react";
+import { KeyRound, Download } from "lucide-react";
 import { loadClients } from "@/lib/clientsStorage";
 import { Permissions } from "@/lib/roles";
 import { toast } from "@/components/ui/use-toast";
@@ -154,6 +153,7 @@ const KeysPage = () => {
   const [historySecret, setHistorySecret] = useState<Secret | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Secret | null>(null);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
 
   const [filters, setFilters] = useState<{
     tool?: string;
@@ -304,8 +304,8 @@ const KeysPage = () => {
           <DashboardHeader email={user?.email ?? ""} />
           <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pb-10 pt-6">
 
-            <section className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]">
-              <div className="space-y-4">
+            <section className="space-y-4">
+              <div className="flex items-center justify-between gap-2">
                 <KeySearch
                   query={filters.searchQuery ?? ""}
                   onChange={(value) => {
@@ -315,46 +315,48 @@ const KeysPage = () => {
                   }}
                   resultsCount={filteredSecrets.length}
                 />
-                <KeyFilters
-                  tools={DEFAULT_TOOLS}
-                  tags={DEFAULT_TAGS}
-                  clients={clientOptions}
-                  filters={filters}
-                  onChange={(next) => {
-                    setFilters(next);
-                    setRemoteFilters(next);
-                  }}
-                />
-                <div className="space-y-3">
-                  <KeysList
-                    secrets={filteredSecrets}
-                    tools={DEFAULT_TOOLS}
-                    tags={DEFAULT_TAGS}
-                    onEdit={handleEdit}
-                    onRequestDelete={handleRequestDelete}
-                    onShowHistory={handleShowHistory}
-                    onToggleVisibility={handleToggleVisibility}
-                    onCopy={handleCopy}
-                  />
-                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                  onClick={() => setExportDialogOpen(true)}
+                  aria-label="Exportar ou importar chaves"
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
               </div>
 
-              <aside className="space-y-4">
-                <KeyStats
-                  total={stats.total}
-                  expiringSoon={stats.expiringIn7Days}
-                  expired={stats.expired}
-                  inactive={stats.inactive}
+              <KeyFilters
+                tools={DEFAULT_TOOLS}
+                tags={DEFAULT_TAGS}
+                clients={clientOptions}
+                filters={filters}
+                onChange={(next) => {
+                  setFilters(next);
+                  setRemoteFilters(next);
+                }}
+              />
+
+              <div className="space-y-3">
+                <KeysList
+                  secrets={filteredSecrets}
+                  tools={DEFAULT_TOOLS}
+                  tags={DEFAULT_TAGS}
+                  onEdit={handleEdit}
+                  onRequestDelete={handleRequestDelete}
+                  onShowHistory={handleShowHistory}
+                  onToggleVisibility={handleToggleVisibility}
+                  onCopy={handleCopy}
                 />
-                <KeyExportImport onExport={handleExport} onImport={handleImportClick} />
-                <input
-                  type="file"
-                  accept="application/json"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImportFile}
-                />
-              </aside>
+              </div>
+
+              <input
+                type="file"
+                accept="application/json"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImportFile}
+              />
             </section>
           </main>
         </div>
@@ -399,6 +401,18 @@ const KeysPage = () => {
             </DialogDescription>
           </DialogHeader>
           <KeyHistory secret={historySecret} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Exportar ou importar chaves</DialogTitle>
+            <DialogDescription>
+              Exporte ou importe um arquivo JSON apenas com dados de desenvolvimento (modo simulado).
+            </DialogDescription>
+          </DialogHeader>
+          <KeyExportImport onExport={handleExport} onImport={handleImportClick} />
         </DialogContent>
       </Dialog>
     </SidebarProvider>
