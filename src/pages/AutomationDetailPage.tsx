@@ -82,14 +82,16 @@ const AutomationDetailPage = () => {
                 <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
                   <span>Status:</span>
                   <Badge
-                    variant={automation.status === "active" ? "default" : "outline"}
-                    className={cn(
-                      "text-[11px]",
-                      automation.status === "inactive" && "border-border/60 text-muted-foreground",
-                    )}
-                  >
-                    {automation.status === "active" ? "Ativo" : "Inativo"}
-                  </Badge>
+                     variant={automation.status === "active" ? "default" : "outline"}
+                     className={cn(
+                       "text-[11px]",
+                       automation.status === "active" &&
+                         "bg-[hsl(var(--secondary)/0.2)] text-[hsl(var(--secondary-foreground))] border-[hsl(var(--secondary))]",
+                       automation.status === "inactive" && "border-border/60 text-muted-foreground",
+                     )}
+                   >
+                     {automation.status === "active" ? "Ativo" : "Inativo"}
+                   </Badge>
                   <Separator orientation="vertical" className="mx-2 h-4" />
                   <div className="flex items-center gap-1.5">
                     <Switch
@@ -184,13 +186,15 @@ const AutomationDetailPage = () => {
                           {new Date(log.timestamp).toLocaleString()}
                         </span>
                         <span
-                          className={cn(
-                            "text-[11px] font-medium",
-                            log.status === "success" ? "text-emerald-500" : "text-destructive",
-                          )}
-                        >
-                          {log.status === "success" ? "Success" : "Failed"}
-                        </span>
+                           className={cn(
+                             "text-[11px] font-medium",
+                             log.status === "success"
+                               ? "text-[hsl(var(--secondary))]"
+                               : "text-[hsl(var(--accent))]",
+                           )}
+                         >
+                           {log.status === "success" ? "Success" : "Failed"}
+                         </span>
                       </div>
                     ))}
                   </div>
