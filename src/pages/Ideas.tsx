@@ -12,6 +12,7 @@ import type { Idea, IdeaPhase } from "@/types/idea";
 import { loadIdeas, saveIdea, deleteIdea } from "@/lib/ideasStorage";
 import { Permissions } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 const IdeasPage = () => {
   const { user, tenantId, userRole } = useAuth();
@@ -22,6 +23,7 @@ const IdeasPage = () => {
   const [editingIdea, setEditingIdea] = useState<Idea | null>(null);
   const [transitioningIdea, setTransitioningIdea] = useState<Idea | null>(null);
   const [draggedIdeaId, setDraggedIdeaId] = useState<string | null>(null);
+  const [dragOverPhase, setDragOverPhase] = useState<IdeaPhase | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -176,13 +178,23 @@ const IdeasPage = () => {
                   if (!draggedIdea || draggedIdea.current_phase === phase) return;
                   await updateIdeaPhase(draggedIdea, phase);
                   setDraggedIdeaId(null);
+                  setDragOverPhase(null);
                 };
 
                 return (
                   <div
                     key={phase}
-                    className="min-w-[260px] flex-1 rounded-lg border border-border/60 bg-background/40 p-2"
-                    onDragOver={(e) => e.preventDefault()}
+                    className={cn(
+                      "flex-1 min-w-[260px] rounded-xl border border-border/60 bg-background/60 p-3 shadow-sm backdrop-blur-sm transition-colors duration-200",
+                      draggedIdeaId && dragOverPhase === phase && "border-[hsl(var(--primary))] bg-[hsl(var(--primary)/0.06)]"
+                    )}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      if (draggedIdeaId) setDragOverPhase(phase);
+                    }}
+                    onDragLeave={() => {
+                      if (dragOverPhase === phase) setDragOverPhase(null);
+                    }}
                     onDrop={handleDropOnPhase}
                   >
                     <div className="mb-3 flex items-center justify-between gap-2">
